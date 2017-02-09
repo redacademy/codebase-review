@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "A Node script that creates two branches - project and review - that allow you to do a PR for an entire codebase.",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "colour": "^0.7.1"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,5 +21,9 @@
     "branch"
   ],
   "author": "BlakeTurner",
-  "license": "ISC"
+  "license": "ISC",
+  "preferGlobal": true,
+  "bin": {
+    "codebase-review": "dist/codebase-review.js"
+  }
 }
