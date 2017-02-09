@@ -24,6 +24,6 @@
   "license": "ISC",
   "preferGlobal": true,
   "bin": {
-    "codebase-review": "dist/codebase-review.js"
+    "codebase-review": "src/codebase-review.js"
   }
 }
