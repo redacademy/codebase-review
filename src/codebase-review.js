@@ -26,7 +26,14 @@ const run = () => {
   console.log(`{{{{{`.rainbow, `${'RED'.red} Skunkz -  🚀  Hack your git for a ${'FULL CODEBASE'.blue} review!`, `}}}}}`);
   console.log();
 
-  runCommand(`git checkout ${emptyBranchName}`, `Checking for existing empty branch...`)
+  runCommand(`git show-ref refs/heads/${emptyBranchName}`, `Checking for existing empty branch...`)
+    .then(res => {
+      console.log('DOES THE THING EXIST????? ' + res);
+      if (res) {
+        return runCommand(`git checkout ${emptyBranchName}`, `Checking out existing empty branch(${emptyBranchName})...`)
+      }
+      return runCommand(`git checkout --orphan ${emptyBranchName}`, `Creating empty branch(${emptyBranchName})...`)
+    })
     .catch(() => runCommand(`git checkout --orphan ${emptyBranchName}`, `Creating empty branch(${emptyBranchName})...`))
     .then(() => runCommand('git rm -rf .', 'Clearing git house...'))
     .then(() => runCommand(`git commit --allow-empty -m "Create ${emptyBranchName} branch"`, 'Commiting changes...'))
