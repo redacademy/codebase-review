@@ -64,6 +64,7 @@ const run = () => {
   .then(() => runCommand(`git checkout -b ${projectBranchName}`, `Creating new project branch(${projectBranchName})...`))
   .then(() => runCommand('git merge master --allow-unrelated-histories', 'Merging master into project branch...'))
   .then(() => runCommand(`git push --set-upstream origin ${projectBranchName}`, `Pushing ${projectBranchName} branch...`))
+  .then(() => runCommand('git checkout master', 'Returning to master branch'))
   .then(() => {
     console.log();
     console.log('----------------------------------------------------------'.rainbow);
