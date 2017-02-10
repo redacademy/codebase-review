@@ -55,7 +55,7 @@ const run = () => {
 
   runCommand(`git branch -D ${emptyBranchName}`, 'Setting up workspace...')
   .catch(() => true) // Swallow error if branch doesn't exist
-  .then(() => runCommand(`git branch -D ${projectBranchName}`, 'Setting up workspace...'))
+  .then(() => runCommand(`git branch -D ${projectBranchName}`))
   .catch(() => true) // Swallow error if branch doesn't exist
   .then(() => runCommand(`git checkout --orphan ${emptyBranchName}`))
   .then(() => runCommand('git rm -rf .', 'Clearing git house...'))
@@ -63,7 +63,7 @@ const run = () => {
   .then(() => runCommand(`git push --set-upstream origin ${emptyBranchName} --force`, `Pushing ${emptyBranchName} branch...`))
   .then(() => runCommand(`git checkout -b ${projectBranchName}`, `Creating new project branch(${projectBranchName})...`))
   .then(() => runCommand('git merge master --allow-unrelated-histories', 'Merging master into project branch...'))
-  .then(() => runCommand(`git push --set-upstream origin ${projectBranchName}`, `Pushing ${projectBranchName} branch...`))
+  .then(() => runCommand(`git push --set-upstream origin ${projectBranchName} --force`, `Pushing ${projectBranchName} branch...`))
   .then(() => runCommand('git checkout master', 'Returning to master branch'))
   .then(() => {
     console.log();
