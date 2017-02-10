@@ -55,7 +55,7 @@ const run = () => {
 
   runCommand(`git branch -D ${emptyBranchName}`, 'Setting up workspace...')
   .catch(() => true) // Swallow error if branch doesn't exist
-  .then(() => runCommand(`git branch -D ${emptyBranchName} ${projectBranchName}`, 'Setting up workspace...'))
+  .then(() => runCommand(`git branch -D ${projectBranchName}`, 'Setting up workspace...'))
   .catch(() => true) // Swallow error if branch doesn't exist
   .then(() => runCommand(`git checkout --orphan ${emptyBranchName}`))
   .then(() => runCommand('git rm -rf .', 'Clearing git house...'))
