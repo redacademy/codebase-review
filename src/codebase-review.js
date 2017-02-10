@@ -26,9 +26,8 @@ const run = () => {
   console.log(`{{{{{`.rainbow, `${'RED'.red} Skunkz -  🚀  Hack your git for a ${'FULL CODEBASE'.blue} review!`, `}}}}}`);
   console.log();
 
-  runCommand(`git branch -D ${emptyBranchName}`, `Removing any existing empty branch...`)
-    .catch(() => true)
-    .then(() => runCommand(`git checkout --orphan ${emptyBranchName}`, `Creating empty branch(${emptyBranchName})...`))
+  runCommand(`git checkout ${emptyBranchName}`, `Checking for existing empty branch...`)
+    .catch(() => runCommand(`git checkout --orphan ${emptyBranchName}`, `Creating empty branch(${emptyBranchName})...`))
     .then(() => runCommand('git rm -rf .', 'Clearing git house...'))
     .then(() => runCommand(`git commit --allow-empty -m "Create ${emptyBranchName} branch"`, 'Commiting changes...'))
     .then(() => runCommand(`git push --set-upstream origin ${emptyBranchName} --force`, `Pushing ${emptyBranchName} branch...`))
