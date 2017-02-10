@@ -22,11 +22,13 @@ const runCommand = (command, message) => {
 }
 
 const run = () => {
-  console.log('--------------------------------------------------------------------------------------------------------'.rainbow);
+  console.log('----------------------------------------------------------'.rainbow);
   console.log(`{{{{{`.rainbow, `${'RED'.red} Skunkz -  🚀  Hack your git for a ${'FULL CODEBASE'.blue} review!`, `}}}}}`);
   console.log();
 
-  runCommand(`git checkout --orphan ${emptyBranchName}`, `Creating empty branch(${emptyBranchName}) ...`)
+  runCommand(`git branch -D ${emptyBranchName}`, `Removing any existing empty branch...`)
+    .catch(() => true)
+    .then(() => runCommand(`git checkout --orphan ${emptyBranchName}`, `Creating empty branch(${emptyBranchName})...`))
     .then(() => runCommand('git rm -rf .', 'Clearing git house...'))
     .then(() => runCommand(`git commit --allow-empty -m "Create ${emptyBranchName} branch"`, 'Commiting changes...'))
     .then(() => runCommand(`git push --set-upstream origin ${emptyBranchName} --force`, `Pushing ${emptyBranchName} branch...`))
@@ -43,8 +45,10 @@ const run = () => {
       console.log('----------------------------------------------------------'.rainbow);
       console.log();
       console.log("You're done! Visit your git repo and make a new pull request.");
-      console.log('Base branch: ' + emptyBranchName.blue);
-      console.log('Compare branch: ' + projectBranchName.blue);
+      console.log();
+      console.log('Base branch: ' + emptyBranchName.green);
+      console.log('Compare branch: ' + projectBranchName.green);
+      console.log();
     })
 }
 

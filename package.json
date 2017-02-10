@@ -1,10 +1,11 @@
 {
   "name": "codebase-review",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A Node script that creates two branches - project and empty - that allow you to do a PR for an entire codebase.",
   "main": "index.js",
   "dependencies": {
-    "colour": "^0.7.1"
+    "colour": "^0.7.1",
+    "yargs": "^6.6.0"
   },
   "devDependencies": {},
   "scripts": {
