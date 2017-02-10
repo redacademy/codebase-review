@@ -33,9 +33,8 @@ const run = () => {
         return runCommand(`git checkout ${emptyBranchName}`, `Checking out existing empty branch(${emptyBranchName})...`)
       }
       return runCommand(`git checkout --orphan ${emptyBranchName}`, `Creating empty branch(${emptyBranchName})...`)
+        .then(() => runCommand('git rm -rf .', 'Clearing git house...'))
     })
-    .catch(() => runCommand(`git checkout --orphan ${emptyBranchName}`, `Creating empty branch(${emptyBranchName})...`))
-    .then(() => runCommand('git rm -rf .', 'Clearing git house...'))
     .then(() => runCommand(`git commit --allow-empty -m "Create ${emptyBranchName} branch"`, 'Commiting changes...'))
     .then(() => runCommand(`git push --set-upstream origin ${emptyBranchName} --force`, `Pushing ${emptyBranchName} branch...`))
     .then(() => {
