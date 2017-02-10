@@ -17,7 +17,7 @@ const execShellPromise = (command) => {
 }
 
 const runCommand = (command, message) => {
-  console.log(message.green);
+  if (message) console.log(message.green);
   return execShellPromise(command);
 }
 
@@ -53,9 +53,11 @@ const run = () => {
   //     console.log();
   //   })
 
-  runCommand(`git branch -D ${emptyBranchName} ${projectBranchName}`, 'Setting up workspace...')
-  .catch(() => true) // Swallow error if branches don't exist
-  .then(() => runCommand(`git checkout --orphan ${emptyBranchName}`, `Creating empty branch(${emptyBranchName})...`))
+  runCommand(`git branch -D ${emptyBranchName}`, 'Setting up workspace...')
+  .catch(() => true) // Swallow error if branch doesn't exist
+  .then(() => runCommand(`git branch -D ${emptyBranchName} ${projectBranchName}`, 'Setting up workspace...'))
+  .catch(() => true) // Swallow error if branch doesn't exist
+  .then(() => runCommand(`git checkout --orphan ${emptyBranchName}`))
   .then(() => runCommand('git rm -rf .', 'Clearing git house...'))
   .then(() => runCommand(`git commit --allow-empty -m "Create ${emptyBranchName} branch"`, 'Commiting changes...'))
   .then(() => runCommand(`git push --set-upstream origin ${emptyBranchName} --force`, `Pushing ${emptyBranchName} branch...`))
@@ -67,8 +69,10 @@ const run = () => {
     console.log('----------------------------------------------------------'.rainbow);
     console.log();
     console.log("You're done! Visit your git repo and make a new pull request.");
-    console.log('Base branch: ' + 'empty'.blue);
-    console.log('Compare branch: ' + 'project'.blue);
+    console.log();
+    console.log('Base branch: ' + emptyBranchName.green);
+    console.log('Compare branch: ' + projectBranchName.green);
+    console.log();
   })
 }
 
