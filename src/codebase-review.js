@@ -1,6 +1,11 @@
 #! /usr/bin/env node
-var child_process = require('child_process');
+const child_process = require('child_process');
+const argv = require('yargs').argv;
 require('colour');
+
+const branchPrefix = argv.prefix || 'codebase-review';
+const emptyBranchName = `${branchPrefix}-empty`;
+const projectBranchName = `${branchPrefix}-project`;
 
 const execShellPromise = (command) => {
   return new Promise((resolve, reject) => {
@@ -17,24 +22,29 @@ const runCommand = (command, message) => {
 }
 
 const run = () => {
-  console.log('----------------------------------------------------------'.rainbow);
+  console.log('--------------------------------------------------------------------------------------------------------'.rainbow);
   console.log(`{{{{{`.rainbow, `${'RED'.red} Skunkz -  🚀  Hack your git for a ${'FULL CODEBASE'.blue} review!`, `}}}}}`);
   console.log();
 
-  runCommand('git checkout --orphan empty', 'Creating empty branch...')
+  runCommand(`git checkout --orphan ${emptyBranchName}`, `Creating empty branch(${emptyBranchName}) ...`)
     .then(() => runCommand('git rm -rf .', 'Clearing git house...'))
-    .then(() => runCommand('git commit --allow-empty -m "Create empty branch"', 'Commiting changes...'))
-    .then(() => runCommand('git push --set-upstream origin empty', 'Pushing empty branch...'))
-    .then(() => runCommand('git checkout -b project', 'Creating project branch...'))
+    .then(() => runCommand(`git commit --allow-empty -m "Create ${emptyBranchName} branch"`, 'Commiting changes...'))
+    .then(() => runCommand(`git push --set-upstream origin ${emptyBranchName} --force`, `Pushing ${emptyBranchName} branch...`))
+    .then(() => {
+      return runCommand(`git checkout ${projectBranchName}`, `Checking for project branch(${projectBranchName})...`)
+        .catch(function() {
+          return runCommand(`git checkout -b ${projectBranchName}`, `Creating new project branch(${projectBranchName})...`)
+        });
+    })
     .then(() => runCommand('git merge master --allow-unrelated-histories', 'Merging master into project branch...'))
-    .then(() => runCommand('git push --set-upstream origin project', 'Pushing project branch...'))
+    .then(() => runCommand(`git push --set-upstream origin ${projectBranchName}`, `Pushing ${projectBranchName} branch...`))
     .then(() => {
       console.log();
       console.log('----------------------------------------------------------'.rainbow);
       console.log();
       console.log("You're done! Visit your git repo and make a new pull request.");
-      console.log('Base branch: ' + 'empty'.blue);
-      console.log('Compare branch: ' + 'project'.blue);
+      console.log('Base branch: ' + emptyBranchName.blue);
+      console.log('Compare branch: ' + projectBranchName.blue);
     })
 }
 
