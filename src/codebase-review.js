@@ -24,7 +24,7 @@ const runCommand = (command, message) => {
 const getRepoUrl = () => {
   return runCommand('git config --get remote.origin.url').then(configUrl => {
     // Remove .git extension
-    let url = configUrl.replace(/\s/, '').replace(/\.git$/, '');
+    let url = configUrl.replace(/\s/, '').replace(/\.git$/, '') + '/compare';
 
     // https clones
     if (/^http/.test(url)) return url;
