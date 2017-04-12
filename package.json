@@ -1,6 +1,6 @@
 {
   "name": "codebase-review",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A Node script that creates two branches - project and empty - that allow you to do a PR for an entire codebase.",
   "main": "index.js",
   "dependencies": {

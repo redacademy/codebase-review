@@ -21,6 +21,19 @@ const runCommand = (command, message) => {
   return execShellPromise(command);
 }
 
+const getRepoUrl = () => {
+  return runCommand('git config --get remote.origin.url').then(configUrl => {
+    // Remove .git extension
+    let url = configUrl.replace(/\s/, '').replace(/\.git$/, '');
+
+    // https clones
+    if (/^http/.test(url)) return url;
+
+    // ssh clones
+    return url.replace(/(^git.+:)?/, 'https://github.com/');
+  });
+}
+
 const run = () => {
   console.log('----------------------------------------------------------'.rainbow);
   console.log(`{{{{{`.rainbow, `${'RED'.red} Skunkz -  🚀  Hack your git for a ${'FULL CODEBASE'.blue} review!`, `}}}}}`);
@@ -38,11 +51,13 @@ const run = () => {
   .then(() => runCommand('git merge master --allow-unrelated-histories', 'Merging master into project branch...'))
   .then(() => runCommand(`git push --set-upstream origin ${projectBranchName} --force`, `Pushing ${projectBranchName} branch...`))
   .then(() => runCommand('git checkout master', 'Returning to master branch'))
-  .then(() => {
+  .then(getRepoUrl)
+  .then((repoUrl) => {
     console.log();
     console.log('----------------------------------------------------------'.rainbow);
     console.log();
-    console.log("You're done! Visit your git repo and make a new pull request.");
+    console.log("You're done! Visit your git repo and make a new pull request:");
+    console.log(repoUrl);
     console.log();
     console.log('Base branch: ' + emptyBranchName.green);
     console.log('Compare branch: ' + projectBranchName.green);
