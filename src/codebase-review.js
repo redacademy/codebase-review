@@ -10,16 +10,16 @@ const emptyBranchName = `${branchPrefix}-empty`;
 const projectBranchName = `${branchPrefix}-project`;
 
 const handleEmptyBranchCreation = () => {
-  return runCommand(`git branch -a | grep ${emptyBranchName}`)
+  return runCommand(`git branch -a | grep ${emptyBranchName} | wc -l`)
     .then(branch => {
-      if (!branch) return createAndPushEmptyBranch();
-      return runCommand(`git checkout ${emptyBranchName}`, `Using remote ${emptyBranchName}`);
-    })
+      if (!parseInt(branch)) return createAndPushEmptyBranch();
+      return runCommand(`git checkout ${emptyBranchName}`, `Using remote version of ${emptyBranchName}`);
+    });
 }
 
 const createAndPushEmptyBranch = () => {
   return runCommand(`git checkout --orphan ${emptyBranchName}`)
-    .then(() => runCommand('git rm -rf .', 'Clearing git house...'))
+    .then(() => runCommand('git rm -rf . > /dev/null', 'Clearing git house...'))
     .then(() => runCommand(`git commit --allow-empty -m "Create ${emptyBranchName} branch"`, 'Commiting changes...'))
     .then(() => runCommand(`git push --set-upstream origin ${emptyBranchName} --force`, `Pushing ${emptyBranchName} branch...`))
 };
@@ -37,7 +37,7 @@ const run = () => {
   .then(checkForUncommittedChanges)
   .then(handleEmptyBranchCreation)
   .then(() => runCommand(`git checkout -b ${projectBranchName}`, `Creating new project branch(${projectBranchName})...`))
-  .then(() => runCommand('git merge master --allow-unrelated-histories', 'Merging master into project branch...'))
+  .then(() => runCommand('git merge master --allow-unrelated-histories > /dev/null', 'Merging master into project branch...'))
   .then(() => runCommand(`git push --set-upstream origin ${projectBranchName} --force`, `Pushing ${projectBranchName} branch...`))
   .then(() => runCommand('git checkout master', 'Returning to master branch'))
   .then(() => runCommand(`git branch -D ${emptyBranchName} ${projectBranchName}`, 'Clearing Codebase Review branches'))
