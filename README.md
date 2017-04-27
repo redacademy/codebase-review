@@ -16,6 +16,15 @@ codebase-review
 codebase-review --prefix=github-code-review
 ```
 
+## Checking for Changes
+
+By default, `codebase-review` will not run if any changes have been made to `HEAD`.
+If you wish to force a review, run:
+
+```
+codebase-review --ignore-changes
+```
+
 ## How it works
 
 - Create a completely empty orphan branch called `codebase-review-empty`

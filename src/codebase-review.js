@@ -37,6 +37,8 @@ const run = () => {
   .then(checkForUncommittedChanges)
   .then(handleEmptyBranchCreation)
   .then(() => runCommand(`git checkout -b ${projectBranchName}`, `Creating new project branch(${projectBranchName})...`))
+  .then(() => runCommand(`git add --all`, 'Adding any hidden files...'))
+  .then(() => runCommand(`git commit -am "Handling hidden files"`, 'Commiting any hidden files...'))
   .then(() => runCommand('git merge master --allow-unrelated-histories > /dev/null', 'Merging master into project branch...'))
   .then(() => runCommand(`git push --set-upstream origin ${projectBranchName} --force`, `Pushing ${projectBranchName} branch...`))
   .then(() => runCommand('git checkout master', 'Returning to master branch'))
@@ -63,6 +65,3 @@ const run = () => {
 }
 
 run();
-
-
-
