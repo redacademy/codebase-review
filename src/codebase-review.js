@@ -8,6 +8,7 @@ const { getRepoUrl, checkForUncommittedChanges } = require('../lib/git-helpers')
 const branchPrefix = argv.prefix || 'codebase-review';
 const emptyBranchName = `${branchPrefix}-empty`;
 const projectBranchName = `${branchPrefix}-project`;
+const sourceBranchName = argv.source || 'master';
 
 const handleEmptyBranchCreation = () => {
   return runCommand(`git branch -a | grep ${emptyBranchName} | wc -l`)
@@ -39,9 +40,9 @@ const run = () => {
   .then(() => runCommand(`git checkout -b ${projectBranchName}`, `Creating new project branch(${projectBranchName})...`))
   .then(() => runCommand(`git add --all`, 'Adding any hidden files...'))
   .then(() => runCommand(`git commit -am "Handling hidden files"`, 'Commiting any hidden files...'))
-  .then(() => runCommand('git merge master --allow-unrelated-histories > /dev/null', 'Merging master into project branch...'))
+  .then(() => runCommand(`git merge ${sourceBranchName} --allow-unrelated-histories > /dev/null`, `Merging ${sourceBranchName} into project branch...`))
   .then(() => runCommand(`git push --set-upstream origin ${projectBranchName} --force`, `Pushing ${projectBranchName} branch...`))
-  .then(() => runCommand('git checkout master', 'Returning to master branch'))
+  .then(() => runCommand(`git checkout ${sourceBranchName}`, `Returning to ${sourceBranchName} branch`))
   .then(() => runCommand(`git branch -D ${emptyBranchName} ${projectBranchName}`, 'Clearing Codebase Review branches'))
   .then(getRepoUrl)
   .then((repoUrl) => {
